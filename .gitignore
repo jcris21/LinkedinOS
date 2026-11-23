@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+# Generated render outputs — reproducible from system/, not checked in
+out_*.html
+out_*.png
+*_kenburns.mp4
+demo_*.mp4
+before_*.png
+*.mp4
+qa*.png
+check_*.png

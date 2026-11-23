@@ -1,0 +1,248 @@
+{
+  "decisions": [
+    {
+      "case_id": "roadmap",
+      "ts": "2026-11-22T21:27:44.680919Z",
+      "best_proposed": "E_linea_tiempo",
+      "best_score": 100,
+      "chosen": "E_linea_tiempo",
+      "human_confirmed": true,
+      "composed_custom": false,
+      "gaps": []
+    },
+    {
+      "case_id": "jerarquia",
+      "ts": "2026-11-22T21:27:46.197751Z",
+      "best_proposed": "B_jerarquia_capas",
+      "best_score": 90,
+      "chosen": "B_jerarquia_capas",
+      "human_confirmed": true,
+      "composed_custom": false,
+      "gaps": []
+    },
+    {
+      "case_id": "hub",
+      "ts": "2026-11-22T21:27:47.040809Z",
+      "best_proposed": "H_hub_red",
+      "best_score": 100,
+      "chosen": "H_hub_red",
+      "human_confirmed": true,
+      "composed_custom": false,
+      "gaps": []
+    },
+    {
+      "case_id": "topologias",
+      "ts": "2026-11-22T21:27:47.890527Z",
+      "best_proposed": "B_jerarquia_capas",
+      "best_score": 45,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "topologias:sin_arquetipo_de_catalogo"
+      ]
+    },
+    {
+      "case_id": "ciclo_agentico",
+      "ts": "2026-11-22T21:27:48.718876Z",
+      "best_proposed": "A_proceso_mejora",
+      "best_score": 65,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "ciclo_agentico:rechazado_por_humano"
+      ]
+    },
+    {
+      "case_id": "ciclo_agentico",
+      "ts": "2026-11-22T22:49:13.243149Z",
+      "best_proposed": "A_proceso_mejora",
+      "best_score": 65,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "ciclo_agentico:rechazado_por_humano"
+      ]
+    },
+    {
+      "case_id": "ciclo_agentico",
+      "ts": "2026-11-22T22:49:41.456359Z",
+      "best_proposed": "A_proceso_mejora",
+      "best_score": 65,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "ciclo_agentico:rechazado_por_humano"
+      ]
+    },
+    {
+      "case_id": "ciclo_agentico",
+      "ts": "2026-11-22T23:09:23.995205Z",
+      "best_proposed": "A_proceso_mejora",
+      "best_score": 65,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "ciclo_agentico:rechazado_por_humano"
+      ]
+    },
+    {
+      "case_id": "ciclo_agentico",
+      "ts": "2026-11-22T23:10:14.721872Z",
+      "best_proposed": "A_proceso_mejora",
+      "best_score": 65,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "ciclo_agentico:rechazado_por_humano"
+      ]
+    },
+    {
+      "case_id": "ciclo_agentico",
+      "ts": "2026-11-22T23:10:41.125660Z",
+      "best_proposed": "A_proceso_mejora",
+      "best_score": 65,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "ciclo_agentico:rechazado_por_humano"
+      ]
+    },
+    {
+      "case_id": "ciclo_agentico",
+      "ts": "2026-11-22T23:13:18.925423Z",
+      "best_proposed": "A_proceso_mejora",
+      "best_score": 65,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "ciclo_agentico:rechazado_por_humano"
+      ]
+    },
+    {
+      "case_id": "ciclo_agentico",
+      "ts": "2026-11-22T23:27:17.298020Z",
+      "best_proposed": "A_proceso_mejora",
+      "best_score": 65,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "ciclo_agentico:rechazado_por_humano"
+      ]
+    },
+    {
+      "case_id": "roadmap",
+      "ts": "2026-11-22T23:27:28.126800Z",
+      "best_proposed": "E_linea_tiempo",
+      "best_score": 100,
+      "chosen": "E_linea_tiempo",
+      "human_confirmed": true,
+      "composed_custom": false,
+      "gaps": []
+    },
+    {
+      "case_id": "jerarquia",
+      "ts": "2026-11-22T23:27:29.130032Z",
+      "best_proposed": "B_jerarquia_capas",
+      "best_score": 90,
+      "chosen": "B_jerarquia_capas",
+      "human_confirmed": true,
+      "composed_custom": false,
+      "gaps": []
+    },
+    {
+      "case_id": "hub",
+      "ts": "2026-11-22T23:27:30.061026Z",
+      "best_proposed": "H_hub_red",
+      "best_score": 100,
+      "chosen": "H_hub_red",
+      "human_confirmed": true,
+      "composed_custom": false,
+      "gaps": []
+    },
+    {
+      "case_id": "topologias",
+      "ts": "2026-11-22T23:27:31.034692Z",
+      "best_proposed": "B_jerarquia_capas",
+      "best_score": 45,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "topologias:sin_arquetipo_de_catalogo"
+      ]
+    },
+    {
+      "case_id": "roadmap",
+      "ts": "2026-11-22T23:27:43.868166Z",
+      "best_proposed": "E_linea_tiempo",
+      "best_score": 100,
+      "chosen": "E_linea_tiempo",
+      "human_confirmed": true,
+      "composed_custom": false,
+      "gaps": []
+    },
+    {
+      "case_id": "jerarquia",
+      "ts": "2026-11-22T23:27:44.893363Z",
+      "best_proposed": "B_jerarquia_capas",
+      "best_score": 90,
+      "chosen": "B_jerarquia_capas",
+      "human_confirmed": true,
+      "composed_custom": false,
+      "gaps": []
+    },
+    {
+      "case_id": "hub",
+      "ts": "2026-11-22T23:27:45.783055Z",
+      "best_proposed": "H_hub_red",
+      "best_score": 100,
+      "chosen": "H_hub_red",
+      "human_confirmed": true,
+      "composed_custom": false,
+      "gaps": []
+    },
+    {
+      "case_id": "topologias",
+      "ts": "2026-11-22T23:27:46.729820Z",
+      "best_proposed": "B_jerarquia_capas",
+      "best_score": 45,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "topologias:sin_arquetipo_de_catalogo"
+      ]
+    },
+    {
+      "case_id": "ciclo_agentico",
+      "ts": "2026-11-22T23:27:47.680338Z",
+      "best_proposed": "A_proceso_mejora",
+      "best_score": 65,
+      "chosen": null,
+      "human_confirmed": false,
+      "composed_custom": true,
+      "gaps": [
+        "ciclo_agentico:rechazado_por_humano"
+      ]
+    }
+  ],
+  "gap_counts": {
+    "topologias:sin_arquetipo_de_catalogo": 3,
+    "ciclo_agentico:rechazado_por_humano": 9
+  },
+  "learned_archetypes": {
+    "H_hub_red": {
+      "approvals": 4,
+      "promoted": true
+    }
+  }
+}
