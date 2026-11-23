@@ -43,17 +43,19 @@ def arc_path(cx, cy, rx, ry, a0, a1, gap=13, bulge=1.0):
             f"{p1[0]:.1f} {p1[1]:.1f}"), pm
 
 
-def gate_block(question, yes, no, top=456):
+def gate_block(question, yes, no, top=456, yes_label="Sí", no_label="No"):
     """Rombo de decisión con sus dos salidas -- el referente lo usa para marcar
     dónde el flujo deja de ser automático. Va dentro del anillo: el interior
-    vacío de un grafo es el equivalente al aire muerto dentro de una caja."""
+    vacío de un grafo es el equivalente al aire muerto dentro de una caja.
+    yes_label/no_label son parametrizables para las variantes de idioma del
+    mismo póster (ES usa "Sí"/"No"; EN pasa "Yes"/"No")."""
     return f"""<div class="gate" style="top:{top}px">
   <div class="gwrap">
     <div class="diamond"><span>{question}</span></div>
   </div>
   <div class="gouts">
-    <div class="gout gyes"><b>Sí</b> · {yes}</div>
-    <div class="gout gno"><b>No</b> · {no}</div>
+    <div class="gout gyes"><b>{yes_label}</b> · {yes}</div>
+    <div class="gout gno"><b>{no_label}</b> · {no}</div>
   </div>
 </div>"""
 

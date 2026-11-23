@@ -22,7 +22,7 @@ Toma un insight técnico (copy + pilar + documentación de soporte) y lo convier
 | Claims/datos de soporte (si hay panel de métricas) | Cris, con fuente citable | Solo si se incluye panel de métricas |
 | Brand kit (paleta, tipografía, logo, foto/handle para byline) | A2 `linkedin-brand-kit` | Sí |
 
-> **Nota de interfaz con B2:** para este formato, `linkedin-hook-copywriter` ya no solo escribe el copy del post — también debe entregar: (1) título del póster, (2) subtítulo, (3) 2-4 bullets o pasos que estructuran el diagrama, y (4) el copy corto que acompaña el post en el feed (el texto que va *fuera* del video). Esto hay que ajustarlo en el spec de B2 cuando se formalice.
+> **Nota de interfaz con B2:** para este formato, `linkedin-hook-copywriter` ya no solo escribe el copy del post — también debe entregar: (1) título del póster, (2) subtítulo, (3) 2-4 bullets o pasos que estructuran el diagrama, y (4) el copy corto que acompaña el post en el feed (el texto que va *fuera* del video). Dado que B3 entrega ES+EN por regla (ver 7), B2 debe entregar estos 4 elementos **en ambos idiomas** (o el insight en bruto suficientemente claro para que B3 traduzca sin perder precisión técnica). Esto hay que ajustarlo en el spec de B2 cuando se formalice.
 
 ---
 
@@ -159,7 +159,8 @@ Pregunta recurrente: para que la persona NO tenga que hacer click y el póster e
 6. **Exportar el póster estático** en alta resolución (PNG, 1350×1890 o equivalente).
 7. **Aplicar el Ken Burns determinístico** con ffmpeg (`zoompan` o script de crop+scale por frame) sobre el PNG, generando el MP4 final con loop sin salto visible.
 8. **QA de legibilidad**: revisar el título/subtítulo y los paneles a tamaño de feed móvil (~480px) antes de pasar a `linkedin-post-qa-brand-check`.
-9. **Entregar** el MP4 + el PNG estático (útil como fallback o para carrusel) + alt-text + metadata.
+9. **Generar la segunda variante de idioma** (ver 7): mismo data/layout, copy traducido — nunca se entrega un solo idioma.
+10. **Entregar** ambos MP4 + ambos PNG estáticos (útiles como fallback o para carrusel) + alt-text + metadata, por idioma.
 
 ## 4. Motor de render del póster — decisión
 
@@ -220,11 +221,27 @@ Cuando Cris comparte una imagen de referencia como "diseño maestro", no se esti
 
 ## 7. Formato de salida (handoff a B4)
 
+**Regla de idioma (no negociable, vigente desde esta versión):** cada ejecución del
+pipeline produce **dos activos del mismo post** — uno en español y uno en inglés —,
+nunca solo uno. Ambos comparten `post_id`, arquetipo, data y layout; lo único que
+cambia es el copy (título, subtítulo, textos de nodos/cards/panel, CTA) y cualquier
+etiqueta de UI embebida en un módulo (ej. el rombo de decisión de `graph.py` usa
+`yes_label`/`no_label` parametrizables — antes tenía "Sí"/"No" quemados, lo cual
+rompía la variante en inglés; ver nota técnica abajo). Convención de nombre de
+archivo: sufijo `_es` / `_en` antes de la extensión (`post_<id>_es.mp4`,
+`post_<id>_en.mp4`).
+
 ```yaml
 post_id: <referencia al copy de B2>
-poster_estatico: poster_<id>.png   # 1350x1890, alta resolución
-archivo_principal: post_<id>.mp4   # 1080x1512 (o 1080x1350), H.264, 5-8s, Ken Burns
-alt_text: "<descripción del diagrama y su conclusión principal>"
+variantes:
+  es:
+    poster_estatico: poster_<id>_es.png   # 1350x1890, alta resolución
+    archivo_principal: post_<id>_es.mp4   # 1080x1512 (o 1080x1350), H.264, 5-8s, Ken Burns
+    alt_text: "<descripción del diagrama y su conclusión principal, en español>"
+  en:
+    poster_estatico: poster_<id>_en.png
+    archivo_principal: post_<id>_en.mp4
+    alt_text: "<same description, in English>"
 arquetipo_elegido: A | B | C | D | E | H | custom   # ver 1.3/1.5 — "custom" = compuesto desde módulos
 match_score: <0-100, del scorer determinístico — ver 1.5>
 match_justificacion: "<qué señales cubre el arquetipo elegido, qué se pierde si aplica>"
@@ -236,8 +253,16 @@ motor_usado: html_screenshot | figma | canva
 nota_para_qa: "<riesgos, cifras ilustrativas marcadas, etc.>"
 ```
 
+**Nota técnica — texto embebido en módulos, no solo en el contenido:** cualquier
+módulo nuevo en `modules.py`/`graph.py`/`palette.py` que incluya una palabra o
+etiqueta de interfaz fija (como "Sí"/"No", "Antes"/"Ahora") debe recibir esa palabra
+como parámetro con default en español, nunca hardcodeada — si no, la variante en
+inglés sale con texto mezclado. Es el mismo tipo de gap que el escape de `%` en CSS:
+un detalle de implementación que solo aparece al generar la segunda variante, no la
+primera.
+
 ## 8. Condición de parada
-Entrega el MP4 + PNG + metadata a `linkedin-post-qa-brand-check` y termina. No decide aprobación ni publica.
+Entrega el MP4 + PNG + metadata **de ambas variantes de idioma (ES + EN)** a `linkedin-post-qa-brand-check` y termina. No decide aprobación ni publica.
 
 ---
 
