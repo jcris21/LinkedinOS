@@ -1,7 +1,11 @@
-"""Frame-accurate capture of a CSS-animated poster, then Ken Burns via ffmpeg.
+"""Frame-accurate capture of a CSS-animated poster. Camera framing is FIXED by
+default (amp=0, pan=0) since this version — the movement lives in the poster's
+own CSS animations (traveling pulses, breathing glow, sequential card ignition),
+not in a Ken Burns camera zoom/pan. Pass amp/pan explicitly if a future format
+ever needs camera movement again; it is no longer the default for any new case.
 
 Usage:
-  python3 render_anim.py <html> <out_prefix> [duration=6] [fps=25] [scale=1.5] [amp=0.10] [pan=15] [preview_t=]
+  python3 render_anim.py <html> <out_prefix> [duration=6] [fps=25] [scale=1.5] [amp=0] [pan=0] [preview_t=]
 If preview_t is given, only renders that single time (seconds) to <out_prefix>_t.png.
 """
 import sys, os, subprocess, shutil
@@ -11,8 +15,8 @@ html, prefix = sys.argv[1], sys.argv[2]
 duration = float(sys.argv[3]) if len(sys.argv) > 3 else 6
 fps = int(sys.argv[4]) if len(sys.argv) > 4 else 25
 scale = float(sys.argv[5]) if len(sys.argv) > 5 else 1.5
-amp = float(sys.argv[6]) if len(sys.argv) > 6 else 0.10
-pan = float(sys.argv[7]) if len(sys.argv) > 7 else 15
+amp = float(sys.argv[6]) if len(sys.argv) > 6 else 0.0
+pan = float(sys.argv[7]) if len(sys.argv) > 7 else 0.0
 preview = sys.argv[8] if len(sys.argv) > 8 else None
 
 SET_T = """(t) => { for (const a of document.getAnimations()) { a.pause(); a.currentTime = t; } }"""
@@ -43,6 +47,6 @@ z = f"1+{amp}*pow(sin(PI*on/{n}),2)"
 y = f"ih/2-(ih/zoom/2)-{pan}*sin(PI*on/{n})"
 cmd = (f'ffmpeg -y -framerate {fps} -i "{fdir}/f_%04d.jpg" -vf '
        f'"zoompan=z=\'{z}\':d=1:x=\'iw/2-(iw/zoom/2)\':y=\'{y}\':s=1080x1350:fps={fps},format=yuv420p" '
-       f'-t {duration} -c:v libx264 -crf 18 -preset slow -pix_fmt yuv420p "{prefix}_kenburns.mp4"')
+       f'-t {duration} -c:v libx264 -crf 18 -preset slow -pix_fmt yuv420p "{prefix}.mp4"')
 subprocess.run(cmd, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-print('done', f'{prefix}_kenburns.mp4')
+print('done', f'{prefix}.mp4')

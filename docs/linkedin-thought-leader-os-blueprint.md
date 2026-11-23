@@ -84,7 +84,7 @@ flowchart TD
 | A2 | `linkedin-brand-kit` *(nueva; apoya en `design:design-system` + `brand-voice:generate-guidelines`)* | Skill | — | Pilares de A1, assets existentes | Paleta, tipografía, plantilla de animación, tono de voz LinkedIn | Figma/Canva (opcional) |
 | B1 | `linkedin-trend-scout` **(nueva)** | Subagente | Tool Use + Research | Pilares, fecha | 3–5 ideas priorizadas con ángulo | WebSearch, share-of-model (opcional) |
 | B2 | `linkedin-hook-copywriter` **(nueva)** | Skill | — | Idea priorizada | 3 variantes de copy/hook on-brand | `brand-voice-enforcement` |
-| B3 | `linkedin-animated-post-builder` **(construida — motor propio, no Canva/RunComfy)** | Skill | Tool Use + Reflection | Copy ganador | Par ES+EN: póster diagrama (HTML→PNG) + MP4 en loop con Ken Burns + pulsos animados, por idioma | HTML/CSS/SVG + Playwright + ffmpeg (ver `system/`) |
+| B3 | `linkedin-animated-post-builder` **(construida — motor propio, no Canva/RunComfy)** | Skill | Tool Use + Reflection | Copy ganador | Par ES+EN: póster diagrama (HTML→PNG) + MP4 en loop, encuadre fijo + pulsos/glow animados, por idioma | HTML/CSS/SVG + Playwright + ffmpeg (ver `system/`) |
 | B4 | `linkedin-post-qa-brand-check` **(nueva)** | Skill | Reflection | Copy + visual | Aprobado / devuelto con feedback | Brand kit (A2) |
 | B5 | `linkedin-calendar-scheduler` | Workflow (n8n) + Skill ligera | Planning | Post aprobado | Slot en calendario editorial | Airtable, n8n |
 | B6 | `linkedin-publish-gate` | Human-in-the-loop + Workflow | — | Post + slot | Post publicado | Unipile (LinkedIn API), n8n |
@@ -109,6 +109,7 @@ flowchart TD
 - **Paleta y componentes:** cuando hay una imagen de referencia "maestra", se extrae la paleta real por muestreo de píxeles (no a ojo) y se replica la anatomía de sus componentes (card con píldora de encabezado, panel punteado con leyenda, barra de hitos) — ver `system/palette.py`.
 - **Manejo de errores:** si el matching no califica para ningún arquetipo (score < 55) o el humano rechaza la propuesta, el composer arma un layout propio desde la librería de módulos y registra el gap (`registry.json`) para priorizarlo o promoverlo a arquetipo de catálogo.
 - **Salida bilingüe (regla de pipeline, no solo de este componente):** cada ejecución entrega dos activos del mismo post — `post_<id>_es.mp4`/`.png` y `post_<id>_en.mp4`/`.png` —, mismo data/layout/arquetipo, copy traducido. Cualquier etiqueta de UI fija en un módulo (ej. "Sí"/"No" en el rombo de decisión de `graph.py`) debe ser parametrizable, nunca quedar hardcodeada en español, o la variante en inglés sale con texto mezclado.
+- **Sin Ken Burns (regla de motor, desde esta versión):** `render_anim.py` ya no aplica zoom/pan de cámara por defecto — feedback de Cris fue que ese movimiento hacía sentir la publicación entera "flotando". El encuadre de cámara queda fijo y el movimiento vive solo en los elementos del diagrama (pulsos, glow, secuencia de cards). El flag de Ken Burns sigue existiendo en el motor por si algún formato futuro lo necesita, pero no es el default.
 
 ### `linkedin-post-qa-brand-check`
 - **description:** "Valida copy + visual contra el brand kit (A2) y un checklist de LinkedIn: longitud de copy, legibilidad sin sonido, alt-text, hashtags (3–5), fuerza del hook en las primeras 2 líneas."

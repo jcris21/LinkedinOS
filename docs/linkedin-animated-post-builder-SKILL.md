@@ -1,12 +1,14 @@
 ---
 name: linkedin-animated-post-builder
-description: Convierte un copy/hook ganador (de linkedin-hook-copywriter) en un póster técnico denso (título+subtítulo y byline/CTA fijos, cuerpo con un diagrama cuyo arquetipo —proceso con mejora, jerarquía de capas, comparación, árbol de decisión, línea de tiempo— se elige según la forma de la información del insight) y lo exporta como MP4 en loop con movimiento Ken Burns (zoom/pan lento), replicando el formato de infográficos técnicos que circulan como "video" en LinkedIn. No genera video creativo escena por escena — el movimiento es determinístico (ffmpeg), el valor está en el diagrama.
+description: Convierte un copy/hook ganador (de linkedin-hook-copywriter) en un póster técnico denso (título+subtítulo y byline/CTA fijos, cuerpo con un diagrama cuyo arquetipo —proceso con mejora, jerarquía de capas, comparación, árbol de decisión, línea de tiempo— se elige según la forma de la información del insight) y lo exporta como MP4 en loop con encuadre fijo (sin zoom/pan de cámara) y la animación viviendo en los elementos del propio diagrama, replicando el formato de infográficos técnicos que circulan como "video" en LinkedIn. No genera video creativo escena por escena — el movimiento es determinístico (ffmpeg + CSS), el valor está en el diagrama.
 ---
 
 # linkedin-animated-post-builder
 
 ## Qué hace
-Toma un insight técnico (copy + pilar + documentación de soporte) y lo convierte en un **póster informativo de una sola pantalla**: un marco fijo (título + subtítulo + byline/CTA, ver 1.1) con un **cuerpo cuyo arquetipo de diagrama se elige según la forma de la información** (ver 1.3 — proceso con mejora medible, jerarquía de capas, comparación de alternativas, árbol de decisión, o línea de tiempo), lo renderiza en alta resolución, y le aplica un **zoom/pan lento y continuo (Ken Burns)** para exportarlo como MP4 en loop — el mismo formato que usan creadores de IA B2B en LinkedIn para que un infográfico estático se distribuya como video nativo.
+Toma un insight técnico (copy + pilar + documentación de soporte) y lo convierte en un **póster informativo de una sola pantalla**: un marco fijo (título + subtítulo + byline/CTA, ver 1.1) con un **cuerpo cuyo arquetipo de diagrama se elige según la forma de la información** (ver 1.3 — proceso con mejora medible, jerarquía de capas, comparación de alternativas, árbol de decisión, o línea de tiempo), lo renderiza en alta resolución, y lo exporta como MP4 en loop con **encuadre de cámara fijo** — el movimiento vive adentro del diagrama (pulsos viajando por las rutas, glow respirando, cards encendiéndose en secuencia), no en la cámara — el mismo formato que usan creadores de IA B2B en LinkedIn para que un infográfico estático se distribuya como video nativo.
+
+> **Nota de historial de diseño:** las primeras versiones de este skill sí aplicaban Ken Burns (zoom/pan lento de cámara sobre el póster completo). Se retiró por feedback explícito de Cris — el zoom/pan hacía que toda la publicación se sintiera "flotando", y eso competía con la lectura del contenido. El encuadre fijo + animación interna es el comportamiento por defecto desde esta versión (ver 5).
 
 **Nota de referencia:** el formato (estructura del póster + tipo de movimiento) está basado en un ejemplo que Cris compartió de un post real de LinkedIn. Este skill replica el **formato**, nunca el contenido ni el diagrama específico de ese post — cada pieza que genera debe ser un diagrama original sobre el pilar/insight de Cris, no una copia del ejemplo.
 
@@ -134,7 +136,7 @@ Al comparar frame a frame los pósters generados contra los tres ejemplos reales
 | Resolución del póster base (render estático) | 1350×1890px (se renderiza ~1.4x más grande que el frame final para dejar margen de zoom) |
 | Resolución del video de salida | 1080×1512px (ratio ≈ 4:5.6, equivalente al ejemplo) — o 1080×1350 (4:5 estándar) si se prioriza consistencia con el resto del feed |
 | Duración del loop | 5-8s (el ejemplo usa ~4.8s) |
-| Movimiento | Zoom continuo 1.0x → ~1.08x a lo largo del clip, o pan vertical lento si el póster es muy alto; **nunca** zoom/pan brusco |
+| Movimiento | Encuadre de cámara **fijo** (sin zoom ni pan) — el movimiento vive en los elementos del diagrama (pulsos, glow, secuencia de cards), no en la cámara |
 | Audio | Ninguno (autoplay de LinkedIn va sin sonido — todo el contenido ya está en el texto quemado del póster) |
 | Texto | Debe ser legible a ~480px de ancho (tamaño real de render en el feed móvil) — nada de texto menor a ~22px efectivos en el póster base |
 
@@ -157,7 +159,7 @@ Pregunta recurrente: para que la persona NO tenga que hacer click y el póster e
 4. **Verificar exactitud técnica** — si el diagrama describe un concepto real (una arquitectura, un patrón, una técnica), no inventar pasos ni cifras; marcar explícitamente cualquier cifra de ejemplo como ilustrativa si no viene de un dato real de Cris.
 5. **Maquetar el póster** en el motor de render elegido (ver decisión abajo), aplicando el brand kit (A2): paleta, tipografía, logo, foto de byline.
 6. **Exportar el póster estático** en alta resolución (PNG, 1350×1890 o equivalente).
-7. **Aplicar el Ken Burns determinístico** con ffmpeg (`zoompan` o script de crop+scale por frame) sobre el PNG, generando el MP4 final con loop sin salto visible.
+7. **Capturar la animación interna frame-exacta** con Playwright + WAAPI y componer el MP4 con ffmpeg, encuadre de cámara fijo (sin zoom/pan), loop sin salto visible.
 8. **QA de legibilidad**: revisar el título/subtítulo y los paneles a tamaño de feed móvil (~480px) antes de pasar a `linkedin-post-qa-brand-check`.
 9. **Generar la segunda variante de idioma** (ver 7): mismo data/layout, copy traducido — nunca se entrega un solo idioma.
 10. **Entregar** ambos MP4 + ambos PNG estáticos (útiles como fallback o para carrusel) + alt-text + metadata, por idioma.
@@ -172,23 +174,23 @@ Pregunta recurrente: para que la persona NO tenga que hacer click y el póster e
 
 **No se usa RunComfy para este formato** — no hay generación de imagen/video creativo involucrada; el "movimiento" es 100% determinístico sobre un render estático, así que un motor generativo de video no aporta nada aquí y sí introduce variabilidad innecesaria.
 
-## 5. El Ken Burns, en términos simples (para quien lo automatice en n8n/ffmpeg)
+## 5. Encuadre fijo + animación interna, en términos simples (para quien lo automatice en n8n/ffmpeg)
 
-- Renderizar el póster más grande que el cuadro final (deja "espacio" para que el zoom tenga hacia dónde moverse sin recortar contenido).
-- `ffmpeg` con el filtro `zoompan`: zoom de 1.0 a ~1.08 a lo largo de todos los frames del clip, centrado ligeramente arriba (donde está el título) o con un pan vertical lento si el póster es muy alto.
-- Igualar el primer y último frame del zoom (o hacer un ciclo "ida y vuelta" muy sutil) para que el loop en el feed no se note al reiniciar.
-- Output a 24-30fps, 5-8s.
+**Por qué se retiró el Ken Burns (zoom/pan de cámara):** las primeras versiones aplicaban un zoom/pan lento y continuo sobre el póster completo. Feedback explícito de Cris: ese movimiento de cámara hacía que toda la publicación se sintiera "flotando" — competía con la lectura, en vez de ayudarla. Desde esta versión, **el encuadre de cámara es fijo por defecto**; todo el movimiento vive dentro del diagrama (ver 5.1).
 
-### 5.1 Motor de movimiento v2 — animación real del diagrama (validado con template dark)
+- `render_anim.py` ya no aplica `zoompan` con zoom/pan — los parámetros `amp` (amplitud de zoom) y `pan` (desplazamiento vertical) tienen default `0`, así que el crop queda centrado y estático en todos los frames.
+- El lienzo sigue teniendo margen de sangrado (1220×1520 para un frame de 1080×1350) porque el fondo decorativo se extiende al margen — eso es independiente del Ken Burns, es solo para que el crop final no corte el fondo contra el borde.
+- Si alguna vez se necesita el movimiento de cámara de nuevo (por ejemplo, para un formato distinto), `render_anim.py` lo sigue soportando pasando `amp`/`pan` explícitos en la llamada — pero ya no es el comportamiento por defecto de ningún caso nuevo.
+- Output a 24-30fps, 5-8s — eso no cambió.
 
-El Ken Burns solo da "vida de cámara". Para que el diagrama en sí se mueva:
-- El póster HTML lleva **animaciones CSS** con duraciones divisoras del loop (1s, 1.5s, 2s, 3s, 6s), para que el loop cierre sin salto:
+### 5.1 Motor de movimiento — animación real del diagrama (validado con template dark)
+
+Con la cámara fija, todo el "sentido de vida" del póster viene de **animaciones CSS** con duraciones divisoras del loop (1s, 1.5s, 2s, 3s, 6s), para que el loop cierre sin salto:
   - líneas punteadas que fluyen (`stroke-dashoffset`)
   - pulsos de luz que viajan por los conectores (`offset-path`, del nodo central a cada satélite, de entradas al hub y del hub a los resultados)
   - glow del nodo central (respiración de 3s)
   - **encendido en secuencia** de las tarjetas narrativas (01→02→03, roles humanos), cada una 1/3 del loop — guía la lectura del ojo
-- `render_anim.py` pausa todas las animaciones con la Web Animations API, fija el tiempo de cada frame (`currentTime`), captura 150 frames (6s × 25fps) y recién después aplica Ken Burns con ffmpeg. Resultado determinístico: el mismo HTML produce exactamente el mismo video.
-- Lienzo con margen de sangrado (1220×1520 para un frame de 1080×1350) y fondo decorativo que se extiende al margen, para que el zoom nunca recorte contenido.
+- `render_anim.py` pausa todas las animaciones con la Web Animations API, fija el tiempo de cada frame (`currentTime`), captura 150 frames (6s × 25fps) y recién después compone el MP4 con ffmpeg (crop fijo, sin zoom/pan). Resultado determinístico: el mismo HTML produce exactamente el mismo video.
 
 ### 5.2 Motor de movimiento v3 — grafo en anillo con rutas SVG reales y pulsos viajando por el trazo (`system/graph.py`)
 
@@ -236,7 +238,7 @@ post_id: <referencia al copy de B2>
 variantes:
   es:
     poster_estatico: poster_<id>_es.png   # 1350x1890, alta resolución
-    archivo_principal: post_<id>_es.mp4   # 1080x1512 (o 1080x1350), H.264, 5-8s, Ken Burns
+    archivo_principal: post_<id>_es.mp4   # 1080x1512 (o 1080x1350), H.264, 5-8s, encuadre fijo + animación interna
     alt_text: "<descripción del diagrama y su conclusión principal, en español>"
   en:
     poster_estatico: poster_<id>_en.png
